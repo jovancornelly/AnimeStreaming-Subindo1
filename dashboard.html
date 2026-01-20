@@ -1,0 +1,95 @@
+<script src="auth.js"></script>
+<script src="database.js"></script>
+<script>
+    // Check authentication
+    document.addEventListener('DOMContentLoaded', async function() {
+        // Redirect jika tidak login
+        if (!Auth.isLoggedIn()) {
+            window.location.href = 'login.html?redirect=' + encodeURIComponent(window.location.href);
+            return;
+        }
+        
+        // Load user data
+        const user = Auth.getCurrentUser();
+        if (user) {
+            // Update UI dengan data user
+            document.getElementById('username').textContent = user.username || user.firstName;
+            
+            // Load user-specific data
+            loadUserWatchHistory(user.id);
+            loadUserFavorites(user.id);
+            loadUserRecommendations(user.id);
+        }
+        
+        // Setup logout
+        document.querySelectorAll('.logout').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                Auth.logout();
+            });
+        });
+    });
+    
+    async function loadUserWatchHistory(userId) {
+        try {
+            const history = await Database.getUserWatchHistory(userId, 5);
+            const container = document.getElementById('continueWatching');
+            
+            if (!container) return;
+            
+            if (history.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-history"></i>
+                        <p>Belum ada riwayat tontonan</p>
+                        <a href="index.html" class="btn-browse">Jelajahi Anime</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Tampilkan history
+            let html = '';
+            for (const item of history) {
+                const anime = await Database.get('anime', item.animeId);
+                if (anime) {
+                    const progressPercent = Math.min(100, (item.progress / item.duration) * 100);
+                    
+                    html += `
+                        <div class="continue-card" onclick="continueWatching(${anime.id}, ${item.episode})">
+                            <img src="${anime.poster}" alt="${anime.title}" loading="lazy">
+                            <div class="continue-info">
+                                <h4>${anime.title}</h4>
+                                <p>Episode ${item.episode}</p>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: ${progressPercent}%"></div>
+                                </div>
+                                <button>
+                                    <i class="fas fa-play"></i> Lanjutkan
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            container.innerHTML = html;
+        } catch (error) {
+            console.error('Error loading watch history:', error);
+        }
+    }
+    
+    async function loadUserFavorites(userId) {
+        try {
+            const favorites = await Database.getUserFavorites(userId);
+            // Tampilkan favorites di UI jika ada elemen khusus
+        } catch (error) {
+            console.error('Error loading favorites:', error);
+        }
+    }
+    
+    async function loadUserRecommendations(userId) {
+        // Berdasarkan riwayat tontonan user
+        // Implementasi sederhana
+    }
+</script>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout - AnimeFlix</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .logout-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .logout-container {
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        .logout-box {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+        
+        .logout-icon {
+            width: 100px;
+            height: 100px;
+            background: rgba(0, 229, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            border: 3px solid #00e5ff;
+        }
+        
+        .logout-icon i {
+            font-size: 48px;
+            color: #00e5ff;
+        }
+        
+        .logout-box h1 {
+            color: #00e5ff;
+            margin-bottom: 15px;
+            font-size: 32px;
+        }
+        
+        .logout-box p {
+            color: #888;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .logout-stats {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 30px 0;
+            text-align: left;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stat-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .stat-label {
+            color: #888;
+        }
+        
+        .stat-value {
+            color: #00e5ff;
+            font-weight: bold;
+        }
+        
+        .logout-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn-login, .btn-home {
+            flex: 1;
+            padding: 15px;
+            border-radius: 15px;
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        
+        .btn-login {
+            background: #00e5ff;
+            color: #000;
+        }
+        
+        .btn-home {
+            background: transparent;
+            color: #00e5ff;
+            border: 2px solid #00e5ff;
+        }
+        
+        .btn-login:hover, .btn-home:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 229, 255, 0.2);
+        }
+        
+        .logout-message {
+            background: rgba(6, 214, 160, 0.1);
+            border: 1px solid rgba(6, 214, 160, 0.3);
+            color: #06D6A0;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .countdown {
+            color: #00e5ff;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 600px) {
+            .logout-actions {
+                flex-direction: column;
+            }
+            
+            .logout-box {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body class="logout-page">
+    <div class="logout-container">
+        <div class="logout-box">
+            <div class="logout-icon">
+                <i class="fas fa-sign-out-alt"></i>
+            </div>
+            
+            <div class="logout-message">
+                <i class="fas fa-check-circle"></i>
+                <span>Anda telah berhasil logout</span>
+            </div>
+            
+            <h1>Sampai Jumpa!</h1>
+            <p>Terima kasih telah menonton di AnimeFlix. Sesi Anda telah berakhir dengan aman.</p>
+            
+            <div class="logout-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Waktu logout:</span>
+                    <span class="stat-value" id="logoutTime"></span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Durasi sesi:</span>
+                    <span class="stat-value" id="sessionDuration"></span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Anime ditonton:</span>
+                    <span class="stat-value" id="animeWatched">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">IP Address:</span>
+                    <span class="stat-value">127.0.0.1</span>
+                </div>
+            </div>
+            
+            <div class="countdown">
+                Mengalihkan ke halaman utama dalam <span id="countdown">10</span> detik
+            </div>
+            
+            <div class="logout-actions">
+                <a href="login.html" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Login Kembali
+                </a>
+                <a href="index.html" class="btn-home">
+                    <i class="fas fa-home"></i> Kembali ke Home
+                </a>
+            </div>
+            
+            <div class="security-note" style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 12px; color: #888;">
+                <p><i class="fas fa-shield-alt"></i> Sesi telah dihapus dari perangkat ini.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set waktu logout
+            const now = new Date();
+            document.getElementById('logoutTime').textContent = 
+                now.toLocaleTimeString('id-ID') + ', ' + 
+                now.toLocaleDateString('id-ID');
+            
+            // Hitung durasi sesi (contoh)
+            const sessionStart = localStorage.getItem('sessionStartTime');
+            let duration = 'Tidak diketahui';
+            
+            if (sessionStart) {
+                const startTime = parseInt(sessionStart);
+                const durationMs = Date.now() - startTime;
+                const hours = Math.floor(durationMs / (1000 * 60 * 60));
+                const minutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
+                duration = `${hours} jam ${minutes} menit`;
+                
+                // Hapus session start time
+                localStorage.removeItem('sessionStartTime');
+            }
+            
+            document.getElementById('sessionDuration').textContent = duration;
+            
+            // Hitung anime yang ditonton dari localStorage
+            const watchHistory = JSON.parse(localStorage.getItem('watchHistory') || '[]');
+            const uniqueAnime = [...new Set(watchHistory.map(item => item.animeId))];
+            document.getElementById('animeWatched').textContent = uniqueAnime.length;
+            
+            // Countdown untuk redirect
+            let countdown = 10;
+            const countdownElement = document.getElementById('countdown');
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                countdownElement.textContent = countdown;
+                
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    window.location.href = 'index.html';
+                }
+            }, 1000);
+            
+            // Hapus semua data sesi
+            localStorage.removeItem('session');
+            sessionStorage.clear();
+            
+            // Hapus cookies
+            document.cookie.split(";").forEach(cookie => {
+                document.cookie = cookie.replace(/^ +/, "")
+                    .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+            });
+        });
+    </script>
+</body>
+</html>
